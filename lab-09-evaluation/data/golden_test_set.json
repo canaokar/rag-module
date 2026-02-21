@@ -1,0 +1,52 @@
+[
+  {
+    "query": "What is the threshold for suspicious transaction reporting?",
+    "expected_doc_ids": ["POL-001", "POL-002"],
+    "expected_answer_contains": ["threshold", "suspicious", "reporting"]
+  },
+  {
+    "query": "What documents are required for KYC verification?",
+    "expected_doc_ids": ["POL-001", "POL-003"],
+    "expected_answer_contains": ["identity", "verification", "document"]
+  },
+  {
+    "query": "What is the maximum loan-to-value ratio?",
+    "expected_doc_ids": ["POL-006", "POL-007"],
+    "expected_answer_contains": ["loan-to-value", "ratio", "maximum"]
+  },
+  {
+    "query": "How often must AML training be completed?",
+    "expected_doc_ids": ["POL-001", "POL-004"],
+    "expected_answer_contains": ["training", "annual", "AML"]
+  },
+  {
+    "query": "What are the data retention requirements?",
+    "expected_doc_ids": ["POL-016", "POL-017"],
+    "expected_answer_contains": ["retention", "years", "data"]
+  },
+  {
+    "query": "What is the process for escalating compliance breaches?",
+    "expected_doc_ids": ["POL-021", "POL-022"],
+    "expected_answer_contains": ["escalation", "compliance", "breach"]
+  },
+  {
+    "query": "What are the capital adequacy requirements?",
+    "expected_doc_ids": ["POL-011", "POL-012"],
+    "expected_answer_contains": ["capital", "adequacy", "requirement"]
+  },
+  {
+    "query": "How are customer complaints handled?",
+    "expected_doc_ids": ["POL-013", "POL-014"],
+    "expected_answer_contains": ["complaint", "resolution", "customer"]
+  },
+  {
+    "query": "What are the restrictions on insider trading?",
+    "expected_doc_ids": ["POL-022", "POL-023"],
+    "expected_answer_contains": ["insider", "trading", "restriction"]
+  },
+  {
+    "query": "What is the approval process for new products?",
+    "expected_doc_ids": ["POL-026", "POL-027"],
+    "expected_answer_contains": ["approval", "product", "process"]
+  }
+]

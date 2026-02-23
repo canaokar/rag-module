@@ -108,11 +108,12 @@ docker exec ollama-service-policychat ollama pull nomic-embed-text
 
 ```bash
 # Create virtual environment (from the 02-rag root directory)
-python3 -m venv .venv
+python -m venv .venv
 
 # Activate it
 source .venv/bin/activate        # macOS / Linux
-# .venv\Scripts\activate         # Windows
+
+.venv\Scripts\activate         # Windows
 
 # Install dependencies
 pip install -r labs/shared/requirements.txt
@@ -139,19 +140,19 @@ docker exec ollama-service-policychat ollama list
 
 # 3. Test Ollama embedding endpoint
 curl -s http://localhost:11434/api/embed \
-  -d '{"model": "bge-m3", "input": "test"}' | python3 -m json.tool | head -5
+  -d '{"model": "bge-m3", "input": "test"}' | python -m json.tool | head -5
 
 # 4. Test Ollama chat endpoint
 curl -s http://localhost:11434/api/chat \
   -d '{"model": "llama3.2", "messages": [{"role": "user", "content": "Say hello"}], "stream": false}' \
-  | python3 -m json.tool
+  | python -m json.tool
 
 # 5. Test PostgreSQL connection
 docker exec pgvector-db-policychat psql -U postgres -d pgvector -c "SELECT 1 FROM pg_extension WHERE extname = 'vector';"
 
 # 6. Test Python environment
 source .venv/bin/activate
-python3 -c "import requests, psycopg2; print('All packages OK')"
+python -c "import requests, psycopg2; print('All packages OK')"
 ```
 
 ---
@@ -480,20 +481,20 @@ python app.py
 # Search endpoint
 curl -s -X POST http://localhost:5001/search \
   -H "Content-Type: application/json" \
-  -d '{"query": "KYC requirements"}' | python3 -m json.tool
+  -d '{"query": "KYC requirements"}' | python -m json.tool
 
 # Ask endpoint (full RAG)
 curl -s -X POST http://localhost:5001/ask \
   -H "Content-Type: application/json" \
-  -d '{"query": "What are the AML reporting thresholds?"}' | python3 -m json.tool
+  -d '{"query": "What are the AML reporting thresholds?"}' | python -m json.tool
 
 # Search with filters
 curl -s -X POST http://localhost:5001/search \
   -H "Content-Type: application/json" \
-  -d '{"query": "reporting requirements", "filters": {"doc_type": "aml"}}' | python3 -m json.tool
+  -d '{"query": "reporting requirements", "filters": {"doc_type": "aml"}}' | python -m json.tool
 
 # List all documents
-curl -s http://localhost:5001/documents | python3 -m json.tool
+curl -s http://localhost:5001/documents | python -m json.tool
 ```
 
 **If port 5001 is already in use**, change the port in `app.py`:
@@ -627,12 +628,12 @@ docker exec ollama-service-policychat ollama rm <model-name>
 
 # Test embedding from command line
 curl -s http://localhost:11434/api/embed \
-  -d '{"model": "bge-m3", "input": "test sentence"}' | python3 -m json.tool | head -5
+  -d '{"model": "bge-m3", "input": "test sentence"}' | python -m json.tool | head -5
 
 # Test chat from command line
 curl -s http://localhost:11434/api/chat \
   -d '{"model": "llama3.2", "messages": [{"role": "user", "content": "Say hello"}], "stream": false}' \
-  | python3 -m json.tool
+  | python -m json.tool
 ```
 
 ### PostgreSQL (via Docker)

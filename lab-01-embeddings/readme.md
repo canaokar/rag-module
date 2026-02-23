@@ -7,6 +7,7 @@ Get hands-on with text embeddings by generating vectors from banking policy sent
 By the end of this lab, you will:
 - Generate text embeddings using the Ollama bge-m3 model
 - Understand embedding dimensions and vector representation
+
 - Compute cosine similarity between embedding vectors
 - Observe how semantic meaning is captured in vector space
 - Explore the effect of chunk length on embedding quality

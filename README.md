@@ -39,7 +39,7 @@
 Start PostgreSQL (with pgvector) and Ollama:
 
 ```bash
-docker compose -f labs/shared/compose.yml up -d
+docker compose -f ./shared/compose.yml up -d
 ```
 
 This starts two containers:
@@ -58,13 +58,13 @@ docker ps --filter "name=policychat"
 Stop containers (when done):
 
 ```bash
-docker compose -f labs/shared/compose.yml down
+docker compose -f ./shared/compose.yml down
 ```
 
 Stop and remove all data (fresh start):
 
 ```bash
-docker compose -f labs/shared/compose.yml down -v
+docker compose -f ./shared/compose.yml down -v
 ```
 
 ### 2. Ollama Models
@@ -116,10 +116,10 @@ source .venv/bin/activate        # macOS / Linux
 .venv\Scripts\activate         # Windows
 
 # Install dependencies
-pip install -r labs/shared/requirements.txt
+pip install -r ./shared/requirements.txt
 ```
 
-**Required packages** (from `labs/shared/requirements.txt`):
+**Required packages** (from `./shared/requirements.txt`):
 
 | Package | Version | Used For |
 |---------|---------|----------|
@@ -586,13 +586,13 @@ python start/tool_wrapper.py   # Tool schema + simulated agent call
 
 ```bash
 # Start services
-docker compose -f labs/shared/compose.yml up -d
+docker compose -f ./shared/compose.yml up -d
 
 # Stop services (keep data)
-docker compose -f labs/shared/compose.yml down
+docker compose -f ./shared/compose.yml down
 
 # Stop services and delete data (clean slate)
-docker compose -f labs/shared/compose.yml down -v
+docker compose -f ./shared/compose.yml down -v
 
 # View container logs
 docker logs pgvector-db-policychat
@@ -688,15 +688,15 @@ python solution/step1.py
 
 | Symptom | Likely Cause | Fix |
 |---------|-------------|-----|
-| `Connection refused` on port 5050 | PostgreSQL container not running | `docker compose -f labs/shared/compose.yml up -d` |
-| `Connection refused` on port 11434 | Ollama container not running | `docker compose -f labs/shared/compose.yml up -d` |
+| `Connection refused` on port 5050 | PostgreSQL container not running | `docker compose -f ./shared/compose.yml up -d` |
+| `Connection refused` on port 11434 | Ollama container not running | `docker compose -f ./shared/compose.yml up -d` |
 | `model 'bge-m3' not found` | Model not pulled | `docker exec ollama-service-policychat ollama pull bge-m3` |
 | `model 'llama3.2' not found` | Model not pulled | `docker exec ollama-service-policychat ollama pull llama3.2` |
 | First embedding call is very slow | Model loading into GPU/memory | Wait 10-30 seconds, it will be fast after |
 | Pipeline seems hung | Ollama processing chunks slowly | Check progress output (prints every 25 chunks) |
 | `type "vector" does not exist` | pgvector extension not enabled | `docker exec pgvector-db-policychat psql -U postgres -d pgvector -c "CREATE EXTENSION IF NOT EXISTS vector;"` |
 | Empty query results | Database not populated | Run Lab 04 solution: `python labs/lab-04-ingestion/solution/step4.py` |
-| `ModuleNotFoundError: psycopg2` | Virtual env not activated or packages not installed | `source .venv/bin/activate && pip install -r labs/shared/requirements.txt` |
+| `ModuleNotFoundError: psycopg2` | Virtual env not activated or packages not installed | `source .venv/bin/activate && pip install -r ./shared/requirements.txt` |
 | Flask port 5001 already in use | Another process on that port | Change to `app.run(port=5002)` in app.py |
 | `ImportError` in Lab 08 | Wrong working directory | Must run from `labs/lab-08-api/start/` |
 | Chat API returns error | Using `/api/embed` instead of `/api/chat` | Embed: `/api/embed`, Chat: `/api/chat` |
@@ -710,10 +710,10 @@ If things are completely broken, start fresh:
 
 ```bash
 # 1. Stop and remove containers + volumes
-docker compose -f labs/shared/compose.yml down -v
+docker compose -f ./shared/compose.yml down -v
 
 # 2. Restart containers (database is recreated from schema.sql)
-docker compose -f labs/shared/compose.yml up -d
+docker compose -f ./shared/compose.yml up -d
 
 # 3. Re-pull models
 docker exec ollama-service-policychat ollama pull bge-m3
@@ -730,7 +730,7 @@ python solution/step5.py
 
 ## Database Schema Reference
 
-The Docker setup automatically creates the schema from `labs/shared/postgres/schema.sql`.
+The Docker setup automatically creates the schema from `./shared/postgres/schema.sql`.
 
 ### Table: `policy_documents`
 

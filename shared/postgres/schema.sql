@@ -20,7 +20,7 @@ CREATE TABLE policy_documents (
 -- Stores chunked segments of policy documents with embeddings
 CREATE TABLE policy_chunks (
     id SERIAL PRIMARY KEY,
-    document_id INT REFERENCES policy_documents(id),
+    document_id TEXT REFERENCES policy_documents(id),
     chunk_index INT NOT NULL,
     content TEXT NOT NULL,
     heading TEXT,

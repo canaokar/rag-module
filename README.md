@@ -751,7 +751,7 @@ The Docker setup automatically creates the schema from `./shared/postgres/schema
 | Column | Type | Description |
 |--------|------|-------------|
 | `id` | SERIAL PRIMARY KEY | Auto-incrementing ID |
-| `document_id` | INT REFERENCES policy_documents(id) | Foreign key to parent document |
+| `document_id` | TEXT REFERENCES policy_documents(doc_id) | Foreign key to parent document |
 | `chunk_index` | INT NOT NULL | Position within document |
 | `content` | TEXT NOT NULL | Chunk text content |
 | `heading` | TEXT | Section heading this chunk came from |

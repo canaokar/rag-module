@@ -1,9 +1,24 @@
--- PolicyChat schema for pgvector database
--- Sets up tables and indexes for banking policy document storage and retrieval
+"""
+Reset the pgvector database — drops and recreates all PolicyChat tables and indexes.
+Run this from the labs/ directory if you need a clean slate.
 
+Usage:
+    python reset_db.py
+"""
+
+import psycopg2
+
+DB_CONFIG = {
+    "dbname": "pgvector",
+    "user": "postgres",
+    "password": "postgres",
+    "host": "localhost",
+    "port": "5050",
+}
+
+SCHEMA_SQL = """
 CREATE EXTENSION IF NOT EXISTS vector;
 
--- Stores full policy documents with metadata
 CREATE TABLE policy_documents (
     id SERIAL PRIMARY KEY,
     doc_id TEXT UNIQUE NOT NULL,
@@ -17,7 +32,6 @@ CREATE TABLE policy_documents (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Stores chunked segments of policy documents with embeddings
 CREATE TABLE policy_chunks (
     id SERIAL PRIMARY KEY,
     document_id TEXT REFERENCES policy_documents(doc_id),
@@ -30,30 +44,35 @@ CREATE TABLE policy_chunks (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- HNSW index for fast approximate nearest-neighbour search on embeddings
 CREATE INDEX idx_policy_chunks_embedding
-    ON policy_chunks
-    USING hnsw (embedding vector_cosine_ops);
+    ON policy_chunks USING hnsw (embedding vector_cosine_ops);
 
--- GIN index on chunk metadata for JSONB queries
 CREATE INDEX idx_policy_chunks_metadata
-    ON policy_chunks
-    USING gin (metadata);
+    ON policy_chunks USING gin (metadata);
 
--- GIN index on document metadata for JSONB queries
 CREATE INDEX idx_policy_documents_metadata
-    ON policy_documents
-    USING gin (metadata);
+    ON policy_documents USING gin (metadata);
 
--- GIN index on search_vector for full-text search
 CREATE INDEX idx_policy_chunks_search_vector
-    ON policy_chunks
-    USING gin (search_vector);
+    ON policy_chunks USING gin (search_vector);
 
--- B-tree index for filtering documents by type
 CREATE INDEX idx_policy_documents_doc_type
     ON policy_documents (doc_type);
 
--- B-tree index for filtering documents by regulatory body
 CREATE INDEX idx_policy_documents_regulatory_body
     ON policy_documents (regulatory_body);
+"""
+
+conn = psycopg2.connect(**DB_CONFIG)
+conn.autocommit = True
+cur = conn.cursor()
+
+print("Dropping existing tables...")
+cur.execute("DROP TABLE IF EXISTS policy_chunks CASCADE;")
+cur.execute("DROP TABLE IF EXISTS policy_documents CASCADE;")
+
+print("Recreating schema (tables + indexes)...")
+cur.execute(SCHEMA_SQL)
+
+print("Done! Database is clean with empty tables ready to go.")
+conn.close()

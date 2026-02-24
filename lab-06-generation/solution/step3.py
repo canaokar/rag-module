@@ -2,6 +2,7 @@
 Lab 06, Step 3 Solution: Full Retrieval-to-Generation Flow
 """
 
+import boto3
 import psycopg2
 import requests
 import json
@@ -15,7 +16,11 @@ DB_CONFIG = {
 }
 
 OLLAMA_URL = "http://localhost:11434/api/embed"
-OLLAMA_CHAT_URL = "http://localhost:11434/api/chat"
+
+# --- Bedrock configuration ---
+BEDROCK_MODEL_ID = "meta.llama3-8b-instruct-v1:0"
+AWS_REGION = "us-east-1"  # Change to your region
+bedrock_client = boto3.client("bedrock-runtime", region_name=AWS_REGION)
 
 SYSTEM_PROMPT = """You are PolicyChat, a banking regulatory policy assistant.
 Answer questions using ONLY the provided context from policy documents.
@@ -83,15 +88,25 @@ def format_context(chunks):
 
 def chat_with_llm(messages):
     """
-    Call Ollama LLM with the given messages list.
+    Call Bedrock LLM (Meta Llama 3) with the given messages list.
+    Converts OpenAI-style messages to Bedrock Converse API format.
     """
-    response = requests.post(OLLAMA_CHAT_URL, json={
-        "model": "llama3.2",
-        "messages": messages,
-        "stream": False
-    })
-    response.raise_for_status()
-    return response.json()["message"]["content"]
+    system_parts = []
+    converse_messages = []
+    for msg in messages:
+        if msg["role"] == "system":
+            system_parts.append({"text": msg["content"]})
+        else:
+            converse_messages.append({
+                "role": msg["role"],
+                "content": [{"text": msg["content"]}]
+            })
+    response = bedrock_client.converse(
+        modelId=BEDROCK_MODEL_ID,
+        system=system_parts,
+        messages=converse_messages,
+    )
+    return response["output"]["message"]["content"][0]["text"]
 
 
 def ask(query, top_k=5):

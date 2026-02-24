@@ -2,6 +2,7 @@
 Lab 06, Step 4 Solution: Edge Case Handling
 """
 
+import boto3
 import psycopg2
 import requests
 import json
@@ -15,7 +16,11 @@ DB_CONFIG = {
 }
 
 OLLAMA_URL = "http://localhost:11434/api/embed"
-OLLAMA_CHAT_URL = "http://localhost:11434/api/chat"
+
+# --- Bedrock configuration ---
+BEDROCK_MODEL_ID = "meta.llama3-8b-instruct-v1:0"
+AWS_REGION = "us-east-1"  # Change to your region
+bedrock_client = boto3.client("bedrock-runtime", region_name=AWS_REGION)
 
 SYSTEM_PROMPT = """You are PolicyChat, a banking regulatory policy assistant.
 Answer questions using ONLY the provided context from policy documents.

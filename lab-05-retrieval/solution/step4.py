@@ -45,6 +45,14 @@ def hybrid_search(query, top_k=5, vector_weight=0.7, text_weight=0.3):
     conn = psycopg2.connect(**DB_CONFIG)
     try:
         with conn.cursor() as cur:
+            # Backfill search_vector if not yet populated
+            cur.execute("""
+                UPDATE policy_chunks
+                SET search_vector = to_tsvector('english', content)
+                WHERE search_vector IS NULL
+            """)
+            conn.commit()
+
             cur.execute("""
                 SELECT
                     content,

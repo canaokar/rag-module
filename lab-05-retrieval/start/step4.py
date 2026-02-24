@@ -47,6 +47,9 @@ def hybrid_search(query, top_k=5, vector_weight=0.7, text_weight=0.3):
         List of dicts with keys: content, heading, vector_score, text_score, combined_score.
     """
     # TODO: implement
+    # 0. After connecting to the DB, backfill search_vector for any rows where it is NULL:
+    #    UPDATE policy_chunks SET search_vector = to_tsvector('english', content)
+    #    WHERE search_vector IS NULL
     # 1. Get the embedding for the query.
     # 2. Write a SQL query that computes both scores:
     #    - vector_score: 1 - (embedding <=> cast_query_vector)

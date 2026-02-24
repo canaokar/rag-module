@@ -5,6 +5,7 @@ Connect the retrieval pipeline (from Lab 05) to the LLM to produce
 grounded answers with citations.
 """
 
+import boto3
 import psycopg2
 import requests
 import json
@@ -18,7 +19,12 @@ DB_CONFIG = {
 }
 
 OLLAMA_URL = "http://localhost:11434/api/embed"
-OLLAMA_CHAT_URL = "http://localhost:11434/api/chat"
+
+# --- Bedrock configuration ---
+# Requires AWS credentials (env vars or ~/.aws/credentials)
+BEDROCK_MODEL_ID = "meta.llama3-8b-instruct-v1:0"
+AWS_REGION = "us-east-1"  # Change to your region
+bedrock_client = boto3.client("bedrock-runtime", region_name=AWS_REGION)
 
 SYSTEM_PROMPT = """You are PolicyChat, a banking regulatory policy assistant.
 Answer questions using ONLY the provided context from policy documents.
@@ -58,14 +64,24 @@ def format_context(chunks):
 
 def chat_with_llm(messages):
     """
-    Call Ollama LLM with the given messages list.
+    Call Bedrock LLM (Meta Llama 3) with the given messages list.
+
+    The messages list uses the OpenAI-style format:
+        [{"role": "system", "content": "..."}, {"role": "user", "content": "..."}]
+
+    You need to convert this to Bedrock Converse API format:
+        - System messages go in the `system` parameter as [{"text": "..."}]
+        - Other messages go in `messages` as [{"role": "user", "content": [{"text": "..."}]}]
 
     Returns:
         The assistant's response content as a string.
     """
     # TODO: implement
-    # POST to OLLAMA_CHAT_URL with model "llama3.2", messages, stream=False.
-    # Return the message content from the response.
+    # 1. Separate system messages from conversation messages.
+    # 2. Convert conversation messages to Bedrock format:
+    #    {"role": "user", "content": [{"text": "..."}]}
+    # 3. Call bedrock_client.converse(modelId=BEDROCK_MODEL_ID, system=..., messages=...)
+    # 4. Return response["output"]["message"]["content"][0]["text"]
     pass
 
 

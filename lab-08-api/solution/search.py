@@ -50,7 +50,7 @@ def search_policies(query, filters=None, top_k=5):
                     pd.title AS doc_title,
                     pc.metadata
                 FROM policy_chunks pc
-                JOIN policy_documents pd ON pc.document_id = pd.id
+                JOIN policy_documents pd ON pc.document_id = pd.doc_id
                 {where_clause}
                 ORDER BY pc.embedding <=> %s::vector
                 LIMIT %s

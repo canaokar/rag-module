@@ -44,7 +44,7 @@ def initial_retrieval(query, top_k=10):
                     pd.effective_date,
                     pd.title AS doc_title
                 FROM policy_chunks pc
-                JOIN policy_documents pd ON pc.document_id = pd.id
+                JOIN policy_documents pd ON pc.document_id = pd.doc_id
                 ORDER BY pc.embedding <=> %s::vector
                 LIMIT %s
             """, (embedding_json, embedding_json, top_k))

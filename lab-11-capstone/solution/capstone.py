@@ -209,7 +209,7 @@ def multi_source_search(query, sources=None, top_k=5):
                    pd.doc_id,
                    pd.title
             FROM policy_chunks pc
-            JOIN policy_documents pd ON pc.document_id = pd.id
+            JOIN policy_documents pd ON pc.document_id = pd.doc_id
             ORDER BY pc.embedding <=> %s::vector
             LIMIT %s
         """, (str(embedding), str(embedding), top_k))

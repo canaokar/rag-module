@@ -40,7 +40,7 @@ def retrieve_vector_only(query, top_k=5):
     cur.execute("""
         SELECT DISTINCT pd.doc_id
         FROM policy_chunks pc
-        JOIN policy_documents pd ON pc.document_id = pd.id
+        JOIN policy_documents pd ON pc.document_id = pd.doc_id
         ORDER BY pc.embedding <=> %s::vector
         LIMIT %s
     """, (str(embedding), top_k))
@@ -66,7 +66,7 @@ def retrieve_hybrid(query, top_k=5):
             SELECT pc.document_id, pd.doc_id,
                    ROW_NUMBER() OVER (ORDER BY pc.embedding <=> %s::vector) AS vec_rank
             FROM policy_chunks pc
-            JOIN policy_documents pd ON pc.document_id = pd.id
+            JOIN policy_documents pd ON pc.document_id = pd.doc_id
             LIMIT %s
         ),
         text_results AS (
@@ -74,7 +74,7 @@ def retrieve_hybrid(query, top_k=5):
                    ROW_NUMBER() OVER (ORDER BY ts_rank(pc.search_vector,
                        plainto_tsquery('english', %s)) DESC) AS text_rank
             FROM policy_chunks pc
-            JOIN policy_documents pd ON pc.document_id = pd.id
+            JOIN policy_documents pd ON pc.document_id = pd.doc_id
             WHERE pc.search_vector @@ plainto_tsquery('english', %s)
             LIMIT %s
         ),

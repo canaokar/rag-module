@@ -43,7 +43,7 @@ def retrieve_doc_ids(query, top_k=5):
     cur.execute("""
         SELECT DISTINCT pd.doc_id
         FROM policy_chunks pc
-        JOIN policy_documents pd ON pc.document_id = pd.id
+        JOIN policy_documents pd ON pc.document_id = pd.doc_id
         ORDER BY pc.embedding <=> %s::vector
         LIMIT %s
     """, (str(embedding), top_k))

@@ -70,7 +70,7 @@ def filtered_vector_search(query, top_k=5, doc_type=None, regulatory_body=None, 
             pd.doc_type,
             pd.effective_date
         FROM policy_chunks pc
-        JOIN policy_documents pd ON pc.document_id = pd.id
+        JOIN policy_documents pd ON pc.document_id = pd.doc_id
         {where_clause}
         ORDER BY pc.embedding <=> %s::vector
         LIMIT %s

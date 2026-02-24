@@ -42,7 +42,7 @@ def vector_only_search(query, top_k=10):
                     pc.metadata->>'review_status' AS review_status,
                     pd.title AS doc_title
                 FROM policy_chunks pc
-                JOIN policy_documents pd ON pc.document_id = pd.id
+                JOIN policy_documents pd ON pc.document_id = pd.doc_id
                 ORDER BY pc.embedding <=> %s::vector
                 LIMIT %s
             """, (embedding_json, embedding_json, top_k))
@@ -103,7 +103,7 @@ def hybrid_filtered_search(query, top_k=10, tag=None, review_status=None, doc_ty
                     pc.metadata->>'review_status' AS review_status,
                     pd.title AS doc_title
                 FROM policy_chunks pc
-                JOIN policy_documents pd ON pc.document_id = pd.id
+                JOIN policy_documents pd ON pc.document_id = pd.doc_id
                 {where_clause}
                 ORDER BY pc.embedding <=> %s::vector
                 LIMIT %s

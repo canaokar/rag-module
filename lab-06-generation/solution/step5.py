@@ -84,7 +84,7 @@ def ask_policychat(query):
                     pd.title AS doc_title,
                     1 - (pc.embedding <=> %s::vector) AS score
                 FROM policy_chunks pc
-                JOIN policy_documents pd ON pc.document_id = pd.id
+                JOIN policy_documents pd ON pc.document_id = pd.doc_id
                 ORDER BY pc.embedding <=> %s::vector
                 LIMIT 5
             """, (embedding_json, embedding_json))

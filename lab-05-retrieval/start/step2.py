@@ -43,7 +43,7 @@ def filtered_vector_search(query, top_k=5, doc_type=None, regulatory_body=None, 
     # TODO: implement
     # 1. Get the embedding for the query.
     # 2. Build a SQL query that JOINs policy_chunks with policy_documents
-    #    on policy_chunks.document_id = policy_documents.id.
+    #    on policy_chunks.document_id = policy_documents.doc_id.
     # 3. Dynamically build a WHERE clause:
     #    - If doc_type is provided, add: pd.doc_type = %s
     #    - If regulatory_body is provided, add: pd.regulatory_body = %s

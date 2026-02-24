@@ -94,7 +94,7 @@ def search_policies(query, embedding, top_k=5, doc_type=None, regulatory_body=No
                pd.doc_id,
                pd.title
         FROM policy_chunks pc
-        JOIN policy_documents pd ON pc.document_id = pd.id
+        JOIN policy_documents pd ON pc.document_id = pd.doc_id
         {where_str}
         ORDER BY pc.embedding <=> %s::vector
         LIMIT %s

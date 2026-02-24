@@ -40,7 +40,7 @@ CREATE TABLE policy_chunks (
     heading TEXT,
     embedding vector(1024),
     metadata JSONB,
-    search_vector tsvector,
+    search_vector tsvector GENERATED ALWAYS AS (to_tsvector('english', content)) STORED,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
